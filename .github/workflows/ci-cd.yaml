@@ -80,8 +80,7 @@ jobs:
         shell: bash
         run: |
           kubectl set image deployment/rest-api-deployment `
-            rest-api=${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe1/${{ env.DOCKER_IMAGE }}:${{ github.sha }} `
-            -n ${{ env.K8S_NAMESPACE }}
+              rest-api=${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe1/${{ env.DOCKER_IMAGE }}:${{ github.sha }} \-n ${{ env.K8S_NAMESPACE }}
           kubectl rollout status deployment/rest-api-deployment -n ${{ env.K8S_NAMESPACE }} --timeout=15m
       - name: Verify deployment
         shell: bash
