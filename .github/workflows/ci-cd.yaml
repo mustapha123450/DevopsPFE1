@@ -65,7 +65,6 @@ jobs:
           cache-to: type=gha,mode=max
  
   deploy:
-<<<<<<< HEAD
   needs: build
   runs-on: self-hosted
   if: github.ref == 'refs/heads/main'
@@ -104,11 +103,11 @@ jobs:
         kubectl get pods -n ${{ env.K8S_NAMESPACE }}
         kubectl get services -n ${{ env.K8S_NAMESPACE }}
         kubectl describe deployment rest-api-deployment -n ${{ env.K8S_NAMESPACE }}
-=======
-    needs: build
-    runs-on: self-hosted
-    if: github.ref == 'refs/heads/main'
-    steps:
+
+      needs: build
+      runs-on: self-hosted
+      if: github.ref == 'refs/heads/main'
+      steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Verify Minikube
@@ -128,7 +127,6 @@ jobs:
           kubectl get pods -n ${{ env.K8S_NAMESPACE }}
           kubectl get services -n ${{ env.K8S_NAMESPACE }}
           kubectl describe deployment rest-api-deployment -n ${{ env.K8S_NAMESPACE }}
->>>>>>> origin/main
 
   notify:
     needs: [test, build, deploy]
