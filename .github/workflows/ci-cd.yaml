@@ -82,7 +82,7 @@ jobs:
       - name: Deploy to Kubernetes
         shell: bash
         run: |
-          kubectl apply -f k8s/all-in-one.yaml -n ${{ env.K8S_NAMESPACE }}
+          kubectl apply -f k8s/deployment.yaml -n ${{ env.K8S_NAMESPACE }}
           kubectl set image deployment/rest-api-deployment \
             rest-api=${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe1/${{ env.DOCKER_IMAGE }}:${{ github.sha }} \
             -n ${{ env.K8S_NAMESPACE }}
