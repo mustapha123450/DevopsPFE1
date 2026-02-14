@@ -59,12 +59,13 @@ jobs:
           push: true
           # ✅ NOM REPO EN MINUSCULES (DevopsPFE → devopspfe)
           tags: |
-            ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe/${{ env.DOCKER_IMAGE }}:${{ github.sha }}
-            ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe/${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe1/${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+            ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe1/${{ env.DOCKER_IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
  
   deploy:
+<<<<<<< HEAD
   needs: build
   runs-on: self-hosted
   if: github.ref == 'refs/heads/main'
@@ -103,6 +104,31 @@ jobs:
         kubectl get pods -n ${{ env.K8S_NAMESPACE }}
         kubectl get services -n ${{ env.K8S_NAMESPACE }}
         kubectl describe deployment rest-api-deployment -n ${{ env.K8S_NAMESPACE }}
+=======
+    needs: build
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Verify Minikube
+        shell: bash
+        run: |
+          minikube status
+          kubectl cluster-info
+      - name: Deploy to Kubernetes
+        shell: bash
+        run: |
+          kubectl set image deployment/rest-api-deployment `
+              rest-api=${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/devopspfe1/${{ env.DOCKER_IMAGE }}:${{ github.sha }} \-n ${{ env.K8S_NAMESPACE }}
+          kubectl rollout status deployment/rest-api-deployment -n ${{ env.K8S_NAMESPACE }} --timeout=15m
+      - name: Verify deployment
+        shell: bash
+        run: |
+          kubectl get pods -n ${{ env.K8S_NAMESPACE }}
+          kubectl get services -n ${{ env.K8S_NAMESPACE }}
+          kubectl describe deployment rest-api-deployment -n ${{ env.K8S_NAMESPACE }}
+>>>>>>> origin/main
 
   notify:
     needs: [test, build, deploy]
